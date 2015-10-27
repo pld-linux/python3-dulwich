@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	tests	# do not perform "make test"
+%bcond_without	doc	# don't build doc
 
 %define 	module	dulwich
 Summary:	A python implementation of the Git file formats and protocols
@@ -13,13 +14,16 @@ Source0:	https://pypi.python.org/packages/source/d/%{module}/%{module}-%{version
 # Source0-md5:	ef70dce05422015373ca2704ddf281e7
 URL:		http://samba.org/~jelmer/dulwich/
 BuildRequires:	python-devel
-BuildRequires:	python-docutils
-BuildRequires:	python-modules
-BuildRequires:	python-nose
 BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+%if %{with tests}
+BuildRequires:	python-nose
+%endif
+%if %{with doc}
+BuildRequires:	python-docutils
 BuildRequires:	sphinx-pdg
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -41,10 +45,12 @@ cd dulwich/tests
 nosetests-%{py_ver} test*.py
 %endif
 
+%if %{with doc}
 # sphinx fails with it from time to time with parallel build
 %{__make} -C docs -j html
 rm -r docs/build/html/_sources
-rm -f docs/build/html/{.buildinfo,objects.inv}
+rm docs/build/html/{.buildinfo,objects.inv}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -65,7 +71,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING docs/build/html
+%doc AUTHORS COPYING %{?with_doc:docs/build/html}
 %attr(755,root,root) %{_bindir}/dul-receive-pack
 %attr(755,root,root) %{_bindir}/dul-upload-pack
 %attr(755,root,root) %{_bindir}/dulwich
