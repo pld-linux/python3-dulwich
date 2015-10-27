@@ -4,7 +4,7 @@
 %bcond_without	doc	# don't build doc
 
 %define 	module	dulwich
-Summary:	A python implementation of the Git file formats and protocols
+Summary:	A Python implementation of the Git file formats and protocols
 Name:		python-%{module}
 Version:	0.11.2
 Release:	1
@@ -27,9 +27,14 @@ BuildRequires:	sphinx-pdg
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Dulwich is a pure-Python implementation of the Git file formats and
-protocols. The project is named after the village in which Mr. and
-Mrs. Git live in the Monty Python sketch.
+Dulwich is a Python implementation of the Git file formats and
+protocols, which does not depend on Git itself.
+
+All functionality is available in pure Python. Optional C extensions
+can be built for improved performance.
+
+The project is named after the village in which Mr. and Mrs. Git live
+in the Monty Python sketch.
 
 %prep
 %setup -q -n %{module}-%{version}
