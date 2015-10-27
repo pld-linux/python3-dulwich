@@ -12,6 +12,7 @@ Group:		Libraries/Python
 Source0:	https://pypi.python.org/packages/source/d/%{module}/%{module}-%{version}.tar.gz
 # Source0-md5:	ef70dce05422015373ca2704ddf281e7
 URL:		http://samba.org/~jelmer/dulwich/
+BuildRequires:	python-devel
 BuildRequires:	python-docutils
 BuildRequires:	python-modules
 BuildRequires:	python-nose
