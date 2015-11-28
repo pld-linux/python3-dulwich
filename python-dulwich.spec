@@ -43,7 +43,7 @@ rm -r %{module}.egg-info
 %build
 CC="%{__cc}" \
 CFLAGS="%{rpmcppflags} %{rpmcflags}" \
-%{__python} setup.py build
+%py_build
 
 %if %{with tests}
 cd dulwich/tests
@@ -59,10 +59,7 @@ rm docs/build/html/{.buildinfo,objects.inv}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install \
-	--skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/%{module}/*.[ch]
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitedir}/%{module}/tests
