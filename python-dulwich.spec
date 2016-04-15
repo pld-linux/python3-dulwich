@@ -12,7 +12,7 @@ License:	GPLv2+ or ASL 2.0
 Group:		Libraries/Python
 Source0:	https://pypi.python.org/packages/source/d/%{module}/%{module}-%{version}.tar.gz
 # Source0-md5:	ef70dce05422015373ca2704ddf281e7
-URL:		http://samba.org/~jelmer/dulwich/
+URL:		https://www.dulwich.io/
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
