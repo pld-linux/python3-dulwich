@@ -1,3 +1,5 @@
+# TODO
+# - python3 package
 #
 # Conditional build:
 %bcond_with	tests	# do not perform "make test"
@@ -6,14 +8,14 @@
 %define 	module	dulwich
 Summary:	A Python implementation of the Git file formats and protocols
 Name:		python-%{module}
-Version:	0.11.2
+Version:	0.13.0
 Release:	1
 License:	GPLv2+ or ASL 2.0
 Group:		Libraries/Python
-Source0:	https://pypi.python.org/packages/source/d/%{module}/%{module}-%{version}.tar.gz
-# Source0-md5:	ef70dce05422015373ca2704ddf281e7
+Source0:	https://www.dulwich.io/releases/%{module}-%{version}.tar.gz
+# Source0-md5:	6dede0626657c2bd08f48ca1221eea91
 URL:		https://www.dulwich.io/
-BuildRequires:	python-devel
+BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
