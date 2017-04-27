@@ -7,25 +7,30 @@
 
 %define 	module	dulwich
 Summary:	A Python implementation of the Git file formats and protocols
+Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python-%{module}
-Version:	0.13.0
+Version:	0.17.3
 Release:	1
-License:	GPLv2+ or ASL 2.0
+License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 Source0:	https://www.dulwich.io/releases/%{module}-%{version}.tar.gz
-# Source0-md5:	6dede0626657c2bd08f48ca1221eea91
+# Source0-md5:	2e5a14b1f4cbc9207b8a4134683a6054
 URL:		https://www.dulwich.io/
 BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.710
+BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with tests}
+BuildRequires:	python-gevent
+BuildRequires:	python-geventhttpclient
 BuildRequires:	python-nose
+BuildRequires:	python-setuptools >= 17.1
 %endif
 %if %{with doc}
 BuildRequires:	python-docutils
 BuildRequires:	sphinx-pdg
 %endif
+Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -38,25 +43,35 @@ can be built for improved performance.
 The project is named after the village in which Mr. and Mrs. Git live
 in the Monty Python sketch.
 
+%description -l pl.UTF-8
+Dulwich to pythonowa implementacja formatów plików i protokołów Gita,
+nie zależąca od samego Gita.
+
+Cała funkcjonalność jest dostępna w czystym Pythonie. Opcjonalnie
+można zbudować rozszerzenia w C poprawiające wydajność.
+
+Nazwa projektu wywodzi się od wioski, w której żyją Pan i Pani Git w
+skeczu Monty Pythona.
+
 %prep
 %setup -q -n %{module}-%{version}
-rm -r %{module}.egg-info
+
+%{__rm} -r %{module}.egg-info
 
 %build
-CC="%{__cc}" \
-CFLAGS="%{rpmcppflags} %{rpmcflags}" \
 %py_build
 
 %if %{with tests}
 cd dulwich/tests
 nosetests-%{py_ver} test*.py
+cd ../..
 %endif
 
 %if %{with doc}
 # sphinx fails with it from time to time with parallel build
 %{__make} -C docs -j html
-rm -r docs/build/html/_sources
-rm docs/build/html/{.buildinfo,objects.inv}
+%{__rm} -r docs/build/html/_sources
+%{__rm} docs/build/html/{.buildinfo,objects.inv}
 %endif
 
 %install
@@ -75,13 +90,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING %{?with_doc:docs/build/html}
+%doc AUTHORS COPYING NEWS README.md README.swift.md TODO %{?with_doc:docs/build/html}
 %attr(755,root,root) %{_bindir}/dul-receive-pack
 %attr(755,root,root) %{_bindir}/dul-upload-pack
 %attr(755,root,root) %{_bindir}/dulwich
 %dir %{py_sitedir}/%{module}
-%dir %{py_sitedir}/%{module}/contrib
 %{py_sitedir}/%{module}/*.py[co]
 %attr(755,root,root) %{py_sitedir}/%{module}/_*.so
-%{py_sitedir}/%{module}-%{version}-py*.egg-info
+%dir %{py_sitedir}/%{module}/contrib
 %{py_sitedir}/%{module}/contrib/*.py[co]
+%{py_sitedir}/%{module}-%{version}-py*.egg-info
