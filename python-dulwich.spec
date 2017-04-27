@@ -28,7 +28,7 @@ BuildRequires:	python-setuptools >= 17.1
 %endif
 %if %{with doc}
 BuildRequires:	python-docutils
-BuildRequires:	sphinx-pdg
+BuildRequires:	sphinx-pdg-2
 %endif
 Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -53,6 +53,17 @@ można zbudować rozszerzenia w C poprawiające wydajność.
 Nazwa projektu wywodzi się od wioski, w której żyją Pan i Pani Git w
 skeczu Monty Pythona.
 
+%package apidocs
+Summary:	Documentation for Python Dulwich module
+Summary(pl.UTF-8):	Dokumentacja moduły Pythona Dulwich
+Group:		Documentation
+
+%description apidocs
+Documentation for Python Dulwich module.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja moduły Pythona Dulwich.
+
 %prep
 %setup -q -n %{module}-%{version}
 
@@ -69,28 +80,26 @@ cd ../..
 
 %if %{with doc}
 # sphinx fails with it from time to time with parallel build
-%{__make} -C docs -j html
-%{__rm} -r docs/build/html/_sources
-%{__rm} docs/build/html/{.buildinfo,objects.inv}
+%{__make} -C docs -j1 html \
+	SPHINXBUILD=sphinx-build-2
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %py_install
 
+%py_postclean
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/%{module}/*.[ch]
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitedir}/%{module}/tests
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitedir}/%{module}/contrib/test_*.py*
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitedir}/docs/tutorial
-
-%py_postclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING NEWS README.md README.swift.md TODO %{?with_doc:docs/build/html}
+%doc AUTHORS COPYING NEWS README.md README.swift.md TODO
 %attr(755,root,root) %{_bindir}/dul-receive-pack
 %attr(755,root,root) %{_bindir}/dul-upload-pack
 %attr(755,root,root) %{_bindir}/dulwich
@@ -100,3 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}/%{module}/contrib
 %{py_sitedir}/%{module}/contrib/*.py[co]
 %{py_sitedir}/%{module}-%{version}-py*.egg-info
+
+%if %{with doc}
+%files apidocs
+%defattr(644,root,root,755)
+%doc docs/build/html/{_static,tutorial,*.html,*.js}
+%endif
