@@ -10,12 +10,12 @@
 Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python-%{module}
-Version:	0.17.3
-Release:	4
+Version:	0.19.6
+Release:	1
 License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 Source0:	https://www.dulwich.io/releases/%{module}-%{version}.tar.gz
-# Source0-md5:	2e5a14b1f4cbc9207b8a4134683a6054
+# Source0-md5:	5b048a0a86b132caa3e93520af64d81a
 URL:		https://www.dulwich.io/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
