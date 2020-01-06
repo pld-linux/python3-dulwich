@@ -2,46 +2,47 @@
 # Conditional build:
 %bcond_without	python2		# CPython 2.x module
 %bcond_without	python3		# CPython 3.x module
-%bcond_with	python3_default	# default binary names to Python 3 version
-%bcond_without	tests		# nose tests
-%bcond_without	doc		# don't build doc
+%bcond_without	tests		# unit tests
+%bcond_without	doc		# Sphinx documentation
 
 %define 	module	dulwich
 Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python-%{module}
-Version:	0.19.6
-Release:	5
+Version:	0.19.14
+Release:	1
 License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 Source0:	https://www.dulwich.io/releases/%{module}-%{version}.tar.gz
-# Source0-md5:	5b048a0a86b132caa3e93520af64d81a
+# Source0-md5:	ed939b01bf60f1d217a0ae7b2828a225
 URL:		https://www.dulwich.io/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
 %if %{with tests}
+BuildRequires:	python-certifi
 BuildRequires:	python-gevent
 BuildRequires:	python-geventhttpclient
-BuildRequires:	python-nose
 BuildRequires:	python-setuptools >= 17.1
+BuildRequires:	python-urllib3 >= 1.24.1
 %endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.3
+BuildRequires:	python3-devel >= 1:3.4
 BuildRequires:	python3-setuptools
 %if %{with tests}
+BuildRequires:	python3-certifi
 BuildRequires:	python3-gevent
 BuildRequires:	python3-geventhttpclient
-BuildRequires:	python3-nose
 BuildRequires:	python3-setuptools >= 17.1
+BuildRequires:	python3-urllib3 >= 1.24.1
 %endif
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with doc}
-BuildRequires:	python-docutils
-BuildRequires:	sphinx-pdg-2
+BuildRequires:	python3-docutils
+BuildRequires:	sphinx-pdg-3
 %endif
 Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -70,7 +71,9 @@ skeczu Monty Pythona.
 Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Group:		Libraries/Python
-Requires:	python3-modules >= 1:3.3
+Requires:	python3-modules >= 1:3.4
+# default binaries
+Conflicts:	python-dulwich < 0.19.14
 
 %description -n python3-%{module}
 Dulwich is a Python implementation of the Git file formats and
@@ -114,7 +117,7 @@ Dokumentacja moduły Pythona Dulwich.
 %py_build
 
 %if %{with tests}
-nosetests-%{py_ver} dulwich/tests/test*.py
+%{__python} -m unittest discover -t . -s dulwich/tests
 %endif
 %endif
 
@@ -122,14 +125,14 @@ nosetests-%{py_ver} dulwich/tests/test*.py
 %py3_build
 
 %if %{with tests}
-nosetests-%{py3_ver} dulwich/tests/test*.py
+%{__python3} -m unittest discover -t . -s dulwich/tests
 %endif
 %endif
 
 %if %{with doc}
 # sphinx fails with it from time to time with parallel build
 %{__make} -C docs -j1 html \
-	SPHINXBUILD=sphinx-build-2
+	SPHINXBUILD=sphinx-build-3
 %endif
 
 %install
@@ -154,6 +157,7 @@ done
 
 for p in dul-receive-pack dul-upload-pack dulwich ; do
 	%{__mv} $RPM_BUILD_ROOT%{_bindir}/$p $RPM_BUILD_ROOT%{_bindir}/${p}-3
+	ln -sf ${p}-3 $RPM_BUILD_ROOT%{_bindir}/${p}
 done
 
 %{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/*.[ch]
@@ -162,25 +166,16 @@ done
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/docs/tutorial
 %endif
 
-for p in dul-receive-pack dul-upload-pack dulwich ; do
-	ln -sf ${p}-%{?with_python3_default:3}%{!?with_python3_default:2} $RPM_BUILD_ROOT%{_bindir}/${p}
-done
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING NEWS README.md README.swift.md TODO
+%doc AUTHORS COPYING NEWS README.rst README.swift.rst TODO
 %attr(755,root,root) %{_bindir}/dul-receive-pack-2
 %attr(755,root,root) %{_bindir}/dul-upload-pack-2
 %attr(755,root,root) %{_bindir}/dulwich-2
-%if %{without python3_default}
-%attr(755,root,root) %{_bindir}/dul-receive-pack
-%attr(755,root,root) %{_bindir}/dul-upload-pack
-%attr(755,root,root) %{_bindir}/dulwich
-%endif
 %dir %{py_sitedir}/%{module}
 %{py_sitedir}/%{module}/*.py[co]
 %attr(755,root,root) %{py_sitedir}/%{module}/_*.so
@@ -192,15 +187,13 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING NEWS README.md README.swift.md TODO
+%doc AUTHORS COPYING NEWS README.rst README.swift.rst TODO
 %attr(755,root,root) %{_bindir}/dul-receive-pack-3
 %attr(755,root,root) %{_bindir}/dul-upload-pack-3
 %attr(755,root,root) %{_bindir}/dulwich-3
-%if %{with python3_default}
 %attr(755,root,root) %{_bindir}/dul-receive-pack
 %attr(755,root,root) %{_bindir}/dul-upload-pack
 %attr(755,root,root) %{_bindir}/dulwich
-%endif
 %dir %{py3_sitedir}/%{module}
 %{py3_sitedir}/%{module}/*.py
 %{py3_sitedir}/%{module}/__pycache__
