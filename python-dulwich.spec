@@ -23,7 +23,7 @@ BuildRequires:	python-setuptools
 BuildRequires:	python-certifi
 BuildRequires:	python-gevent
 BuildRequires:	python-geventhttpclient
-BuildRequires:	python-setuptools >= 17.1
+BuildRequires:	python-setuptools >= 1:17.1
 BuildRequires:	python-urllib3 >= 1.24.1
 %endif
 %endif
@@ -34,7 +34,7 @@ BuildRequires:	python3-setuptools
 BuildRequires:	python3-certifi
 BuildRequires:	python3-gevent
 BuildRequires:	python3-geventhttpclient
-BuildRequires:	python3-setuptools >= 17.1
+BuildRequires:	python3-setuptools >= 1:17.1
 BuildRequires:	python3-urllib3 >= 1.24.1
 %endif
 %endif
