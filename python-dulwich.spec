@@ -9,12 +9,13 @@
 Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python-%{module}
-Version:	0.19.14
-Release:	3
+# keep 0.19.x here for python2 support
+Version:	0.19.16
+Release:	1
 License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 Source0:	https://www.dulwich.io/releases/%{module}-%{version}.tar.gz
-# Source0-md5:	ed939b01bf60f1d217a0ae7b2828a225
+# Source0-md5:	0715a7cc669dd19416b4ddc797e84c1f
 URL:		https://www.dulwich.io/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
@@ -23,6 +24,7 @@ BuildRequires:	python-setuptools
 BuildRequires:	python-certifi
 BuildRequires:	python-gevent
 BuildRequires:	python-geventhttpclient
+BuildRequires:	python-mock
 BuildRequires:	python-setuptools >= 1:17.1
 BuildRequires:	python-urllib3 >= 1.24.1
 %endif
