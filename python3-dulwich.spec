@@ -117,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dulwich
 %dir %{py3_sitedir}/%{module}
 %{py3_sitedir}/%{module}/*.py
+%{py3_sitedir}/%{module}/py.typed
 %{py3_sitedir}/%{module}/__pycache__
 %attr(755,root,root) %{py3_sitedir}/%{module}/_*.cpython-*.so
 %dir %{py3_sitedir}/%{module}/contrib
