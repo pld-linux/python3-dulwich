@@ -1,19 +1,19 @@
 #
 # Conditional build:
-%bcond_with	tests		# unit tests (one failing)
+%bcond_with	tests		# unit tests
 %bcond_without	doc		# Sphinx documentation
 
 %define 	module	dulwich
 Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python3-%{module}
-Version:	0.20.33
+Version:	0.20.50
 Release:	1
 License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/dulwich/
 Source0:	https://files.pythonhosted.org/packages/source/d/dulwich/%{module}-%{version}.tar.gz
-# Source0-md5:	a0cf0fe3a3125874f2bc03d834611d44
+# Source0-md5:	19faa221d4c315ec782bbeb45c3f6405
 URL:		https://www.dulwich.io/
 BuildRequires:	python3-devel >= 1:3.6
 BuildRequires:	python3-setuptools
@@ -24,7 +24,7 @@ BuildRequires:	python3-gevent
 BuildRequires:	python3-geventhttpclient
 BuildRequires:	python3-gpg >= 1.8
 BuildRequires:	python3-setuptools >= 1:17.1
-BuildRequires:	python3-urllib3 >= 1.24.1
+BuildRequires:	python3-urllib3 >= 1.25
 %endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/py.typed
 %{py3_sitedir}/%{module}/__pycache__
 %attr(755,root,root) %{py3_sitedir}/%{module}/_*.cpython-*.so
+%dir %{py3_sitedir}/%{module}/cloud
+%{py3_sitedir}/%{module}/cloud/*.py
+%{py3_sitedir}/%{module}/cloud/__pycache__
 %dir %{py3_sitedir}/%{module}/contrib
 %{py3_sitedir}/%{module}/contrib/*.py
 %{py3_sitedir}/%{module}/contrib/__pycache__
