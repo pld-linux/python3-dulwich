@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	tests		# unit tests
+%bcond_without	tests		# unit tests
 %bcond_without	doc		# Sphinx documentation
 
 %define 	module	dulwich
