@@ -8,7 +8,7 @@ Summary:	A Python implementation of the Git file formats and protocols
 Summary(pl.UTF-8):	Pythonowa implementacja formatów plików i protokołów Gita
 Name:		python3-%{module}
 Version:	0.20.50
-Release:	1
+Release:	2
 License:	GPL v2+ or Apache 2.0+
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/dulwich/
